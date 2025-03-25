@@ -1,0 +1,195 @@
+---
+title: "Assignment 2 BUS4028"
+author: "Group-3"
+output: pdf_document
+---
+
+```{r}
+data <- read.csv("C:/T405/R programming/grammy_winners.csv", stringsAsFactors = FALSE)
+head(data)
+```
+
+```{r}
+# Print the structure of your dataset
+str(data)
+
+```
+
+```{r}
+# List the variables in your dataset
+names(data)
+
+```
+
+```{r}
+# Print the top 15 rows of your dataset
+head(data, 15)
+```
+
+```{r}
+# Write a user defined function using any of the variables from the data set
+awards_by_year <- function(data) {
+  year_counts <- table(data$year)
+  year_counts <- sort(year_counts)
+  return(year_counts)
+}
+awards_by_year(data)
+```
+```{r}
+# Use data manipulation techniques and filter rows based on any logical criteria that exist in your dataset.
+album_of_the_year <- subset(data, category == "Album Of The Year")
+head(album_of_the_year)
+```
+
+```{r}
+# Identify the dependent & independent variables and use reshaping techniques and create a new data frame by joining those variables from your dataset.
+
+award_data <- data[, c("year", "artist")]
+
+# Filtering top 3 artists 
+top_artists <- c("Beyoncé", "U2", "Stevie Wonder")
+award_data <- subset(award_data, artist %in% top_artists)
+
+# Remove duplicates
+award_data <- unique(award_data)
+
+# New table
+reshaped <- table(award_data$year, award_data$artist)
+
+head(reshaped, 5)
+
+
+```
+```{r}
+nrow(data)
+```
+
+
+```{r}
+# Remove missing values in your dataset.
+clean_data <- na.omit(data)
+nrow(clean_data)
+```
+
+```{r}
+nrow(data)    
+
+```
+```{r}
+# Since ther is no missing values, to double check we used sum(is.na()) to make sure its correct
+sum(is.na(data))
+
+```
+
+```{r}
+# Identify and remove duplicated data in your dataset
+duplicated_rows <- data[duplicated(data), ]
+head(duplicated_rows)
+
+```
+```{r}
+nrow(duplicated_rows)        # Total duplicate rows found
+```
+
+
+```{r}
+data_no_duplicates <- data[!duplicated(data), ]
+head(data_no_duplicates)
+
+```
+```{r}
+nrow(data_no_duplicates)     # After removing duplicates
+```
+```{r}
+# Reorder multiple rows in descending order
+ # Reorder rows by year (descending) and artist (descending)
+reordered_data <- data[order(-data$year, -xtfrm(data$artist)), ]
+ # View the top rows of the reordered dataset
+head(reordered_data)
+```
+```{r}
+# Rename some of the column names in your dataset
+colnames(data)[colnames(data) == "artist"] <- "artist_name"
+colnames(data)[colnames(data) == "year"] <- "award_year"
+
+names(data)
+```
+```{r}
+# Add new variables in your data frame by using a mathematical function (for e.g. – multiply an existing column by 2 and add it as a new variable to your data frame)
+data$next_award_check_year <- data$award_year + 2
+head(data[, c("award_year", "next_award_check_year")])
+
+```
+```{r}
+# training set using random number generator engine
+set.seed(123)  # for reproducibility
+ # random indices for training set (e.g., 70% of data)
+train_index <- sample(1:nrow(data), size = 0.7 * nrow(data))
+ # training set
+training_set <- data[train_index, ]
+
+head(training_set) 
+```
+```{r}
+# Print the summary statistics of your dataset
+summary(data)
+```
+```{r}
+# Use any of the numerical variables from the dataset and perform the following statistical functions
+
+ # Mean
+mean(data$award_year)
+
+ # Median
+median(data$award_year)
+
+# Mode (custom function, since R has no built-in mode)
+get_mode <- function(x) {
+  uniq_vals <- unique(x)
+  uniq_vals[which.max(tabulate(match(x, uniq_vals)))]
+}
+get_mode(data$award_year)
+
+# Range
+range(data$award_year)
+```
+```{r}
+award_counts <- table(data$award_year)
+award_df <- as.data.frame(award_counts)
+colnames(award_df) <- c("year", "award_count")
+award_df$year <- as.numeric(as.character(award_df$year))  # convert year to numeric
+head(award_df) 
+```
+
+```{r}
+# Plot a scatter plot for any 2 variables in your dataset
+plot(award_df$year, award_df$award_count,
+     main = "Awards Given Per Year",
+     xlab = "Year",
+     ylab = "Number of Awards",
+     pch = 19,
+     col = "blue")
+
+```
+
+```{r}
+
+barplot(award_counts,
+        main = "Number of Awards Per Year",
+        xlab = "Year",
+        ylab = "Number of Awards",
+        col = "orange",
+        las = 2)
+
+```
+
+```{r}
+# Find the correlation between any 2 variables by applying Pearson correlation
+category_counts <- aggregate(category ~ award_year, data = data, FUN = function(x) length(unique(x)))
+
+```
+```{r}
+cor(category_counts$award_year, category_counts$category, method = "pearson")
+
+```
+0.86 shows that as the years increase, the number of award categories also increases — consistently.
