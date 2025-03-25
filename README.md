@@ -167,6 +167,8 @@ plot(award_df$year, award_df$award_count,
      col = "blue")
 ```
 **This scatter plot visualizes how many awards were given each year.**
+![image](https://github.com/user-attachments/assets/b31462a7-573c-4c49-863e-e28a8114c04c)
+
 
 ---
 
@@ -180,6 +182,8 @@ barplot(award_counts,
         las = 2)
 ```
 **Displays the number of awards each year in bar format for clearer comparison.**
+![image](https://github.com/user-attachments/assets/9f1ff186-057c-447e-a816-efbccdbad4d3)
+
 
 ---
 
